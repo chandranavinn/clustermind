@@ -60,7 +60,7 @@ jobs:
           sha=${GITHUB_SHA}
 
           # overwrite values.yaml with the new SHA-based tags
-          cat > charts/clustermind/values.yaml <<EOF2
+          cat > charts/clustermind/values.yaml << 'VYAML'
 frontend:
   replicaCount: 2
   image:
@@ -78,7 +78,7 @@ backend:
     pullPolicy: IfNotPresent
   service:
     port: 8000
-EOF2
+VYAML
 
           git add charts/clustermind/values.yaml
           git commit -m "chore: deploy images for ${sha}"
