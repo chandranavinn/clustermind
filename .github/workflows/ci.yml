@@ -47,7 +47,10 @@ jobs:
       - name: Clone GitOps repo
         env:
           GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}
-        run: git clone https://x-access-token:${GITOPS_TOKEN}@github.com/${GITOPS_REPO}.git gitops-checkout
+        run: |
+          token="$(printf '%s' "${GITOPS_TOKEN}" | tr -d '[:space:]')"
+          repo="$(printf '%s' "${GITOPS_REPO}" | tr -d '[:space:]')"
+          git clone "https://x-access-token:${token}@github.com/${repo}.git" "gitops-checkout"
 
       - name: Write new values.yaml
         run: |
@@ -77,9 +80,11 @@ jobs:
         env:
           GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}
         run: |
+          token="$(printf '%s' "${GITOPS_TOKEN}" | tr -d '[:space:]')"
+          repo="$(printf '%s' "${GITOPS_REPO}" | tr -d '[:space:]')"
           cd gitops-checkout
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add charts/clustermind/values.yaml
           git commit -m "chore: deploy images for ${GITHUB_SHA}" || echo "No changes to commit"
-          git push https://x-access-token:${GITOPS_TOKEN}@github.com/${GITOPS_REPO}.git main
+          git push "https://x-access-token:${token}@github.com/${repo}.git" main
