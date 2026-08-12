@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cm-frontend
+  labels:
+    app: cm-frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: cm-frontend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
